@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import pygame, time, datetime, os, random, json, base64
 if os.path.isfile("conf.json"):
     conffile = open("conf.json", "r")
@@ -46,7 +47,7 @@ class Snake(pygame.sprite.Sprite):
         for n in range(0, startlen):
             self.list.append([x - offsetx, y - offsety])
     def draw(self):
-        for posnake in self.list:
+        for pos in self.list:
             screen.blit(self.image, (pos[0] * base, pos[1] * base))
     def keydown(self, key):
         if not key in self.keys.keys(): return
@@ -66,8 +67,8 @@ class Snake(pygame.sprite.Sprite):
                     screen.blit(rendered_text, (h / 2 - rendered_text.get_height() / 2, w / 2 - rendered_text.get_width() / 2))
                     pygame.display.flip()
                     time.sleep(3)
-                    for sp in snakeGroup.sprites():
-                        if snake.name != self.name: sp.kill()
+                    for sn in snakeGroup.sprites():
+                        if snake.name != self.name: sn.kill()
                     for pu in powerupGroup.sprites(): pu.kill()
                     self.kill()
                     init()
@@ -93,7 +94,7 @@ class Snake(pygame.sprite.Sprite):
         if pos in self.list[1:]:
             self.loose()
         for snake in snakeGroup.sprites():
-            if posnake in s.list and s.name != self.name:
+            if pos in snake.list and snake.name != self.name:
                 self.loose()
         for pu in powerupGroup.sprites():
             if pos == pu.pos:
@@ -114,7 +115,7 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             for snake in snakeGroup.sprites():
-                s.keydown(event.key)
+                snake.keydown(event.key)
             if event.key == pygame.K_F12:
                 pygame.image.save(screen, str(datetime.datetime.now()) + ".png")
                 screen.fill((0, 0, 0))
