@@ -42,11 +42,11 @@ class Snake(pygame.sprite.Sprite):
         #self.list.append([x, y])
         self.move = direction
         self.powerp = 0
-        ox, oy = direction
+        offsetx, offsety = direction
         for n in range(0, startlen):
-            self.list.append([x - ox, y - oy])
+            self.list.append([x - offsetx, y - offsety])
     def draw(self):
-        for pos in self.list:
+        for posnake in self.list:
             screen.blit(self.image, (pos[0] * base, pos[1] * base))
     def keydown(self, key):
         if not key in self.keys.keys(): return
@@ -62,8 +62,8 @@ class Snake(pygame.sprite.Sprite):
                     if snake.list[0] in self.list:
                         snake.name = "Nobody"
                     screen.fill((255, 100, 0))
-                    rs = font.render(snake.name + " won!", True, (0, 0, 0))
-                    screen.blit(rs, (h / 2 - rs.get_height() / 2, w / 2 - rs.get_width() / 2))
+                    rendered_text = font.render(snake.name + " won!", True, (0, 0, 0))
+                    screen.blit(rendered_text, (h / 2 - rendered_text.get_height() / 2, w / 2 - rendered_text.get_width() / 2))
                     pygame.display.flip()
                     time.sleep(3)
                     for sp in snakeGroup.sprites():
@@ -92,8 +92,8 @@ class Snake(pygame.sprite.Sprite):
             self.loose()
         if pos in self.list[1:]:
             self.loose()
-        for s in snakeGroup.sprites():
-            if pos in s.list and s.name != self.name:
+        for snake in snakeGroup.sprites():
+            if posnake in s.list and s.name != self.name:
                 self.loose()
         for pu in powerupGroup.sprites():
             if pos == pu.pos:
@@ -113,9 +113,9 @@ while True:
     screen.fill((255, 255, 255))
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
-            for s in snakeGroup.sprites():
+            for snake in snakeGroup.sprites():
                 s.keydown(event.key)
-            if event.key == pygame.K_PRINT:
+            if event.key == pygame.K_F12:
                 pygame.image.save(screen, str(datetime.datetime.now()) + ".png")
                 screen.fill((0, 0, 0))
                 pygame.display.flip()
