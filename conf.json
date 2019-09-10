@@ -1,0 +1,14 @@
+{
+    "base": 16,
+    "fps": 60,
+    "font": [
+        "Roboto",
+        30
+    ],
+    "height": 512,
+    "width": 512,
+    "counter": {
+        "snake": 12,
+        "power": 600
+    }
+}
