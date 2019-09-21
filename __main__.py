@@ -87,10 +87,14 @@ class Snake(pygame.sprite.Sprite):
         if not isrunning:
             return
         pos = self.list[0]
-        if pos[0] > w or pos[0] < 0:
-            self.loose()
-        elif pos[1] > h or pos[1] < 0:
-            self.loose()
+        if pos[0] > w // base:
+            pos[0] = 0
+        elif pos[1] > h // base:
+            pos[1] = 0
+        elif pos[0] < 0:
+            pos[0] = w // base
+        elif pos[1] < 0:
+            pos[1] = h // base
         if pos in self.list[1:]:
             self.loose()
         for snake in snakeGroup.sprites():
