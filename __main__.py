@@ -53,6 +53,7 @@ class Snake(pygame.sprite.Sprite):
         if not key in self.keys.keys(): return
         self.move = self.keys[key]
     def loose(self):
+        #return #Cheat
         n = 0
         for sn in snakeGroup.sprites():
             n += 1
