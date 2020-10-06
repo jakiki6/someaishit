@@ -1,5 +1,11 @@
 #!/usr/bin/python3
-import pygame, time, datetime, os, random, json, base64
+
+from ai import ai_magic
+
+import pygame, time, datetime, os, random, json, base64, threading
+
+pygame.mixer.quit()
+
 if os.path.isfile("conf.json"):
     conffile = open("conf.json", "r")
     conf = json.loads("\n".join(conffile.readlines()))
@@ -28,11 +34,13 @@ pygame.display.set_caption("Snakefight")
 font = pygame.font.SysFont(fontname, fontsize)
 uhr = pygame.time.Clock()
 def init():
-    snakeGroup.add(Snake("1.png", 0, 5, {119 : [0, -1], 115 : [0, 1], 97 : [-1, 0], 100 : [1, 0]}, "Snake 1", [0, 1], 5)) # Img, startxtile, startytile, keys(Key-ID : move), name, startdirection, lenght
-    snakeGroup.add(Snake("2.png", 31, 26, {273 : [0, -1], 274 : [0, 1], 276 : [-1, 0], 275 : [1, 0]}, "Snake 2", [0, -1], 5))
+    snakeGroup.add(Snake("1.png", 0, 5, {119 : [0, -1], 115 : [0, 1], 97 : [-1, 0], 100 : [1, 0]}, "Snake 1", [0, 1], False, 5)) # Img, startxtile, startytile, keys(Key-ID : move), name, startdirection, lenght
+    sn = Snake("2.png", 31, 26, {273 : [0, -1], 274 : [0, 1], 276 : [-1, 0], 275 : [1, 0]}, "Snake 2", [0, -1], True, 5)
+    snakeGroup.add(sn)
+    threading.Thread(target=ai_magic, args=(sn,), daemon = True).start()
     isrunning = True
 class Snake(pygame.sprite.Sprite):
-    def __init__(self, img, x, y, keys, name, direction, startlen = 3):
+    def __init__(self, img, x, y, keys, name, direction, ai, startlen = 3):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(img)
         self.rect = self.image.get_rect()
@@ -46,6 +54,7 @@ class Snake(pygame.sprite.Sprite):
         offsetx, offsety = direction
         for n in range(0, startlen):
             self.list.append([x - offsetx, y - offsety])
+        self.ai = ai
     def draw(self):
         for pos in self.list:
             screen.blit(self.image, (pos[0] * base, pos[1] * base))
